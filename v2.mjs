@@ -14,4 +14,3 @@ const background = {
 }
 
 
-console.log(background.image("https:KKK","cover"))
