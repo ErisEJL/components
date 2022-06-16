@@ -1,23 +1,33 @@
-import { obj } from './obj.mjs';
-const setAttributes = (o) =>Object.keys(o).map(x => `${x}="${o[x]}"`).join(' ');
-const setHtml = (o) =>`<${o.name} ${setAttributes(o.attributes)}>${o.content}</${o.name}>`
+const test = {
+            name:"main",
+            attributes:{ class:"koe"},
+            innerHTML:[{
+                name:"div",
+                class:"koe",
+                content:"Hallo"
+            },
+            {
+                name:"span",
+                class:"aap",
+                innerHTML:[{
+                    name:"p",
+                    content:"tata"
+                }]
+        }
+        ]
+
+        }
 
 
-const document = {
-    html:{
-        head:{},
-        body:{}
-    }
-};
-["title","meta","links","style"].forEach(x => document.html.head[x] = "");
-["header","main","footer","nav","dialog"].forEach(x => document.html.body[x] = '');
-document.html.body.header = {
-    div:{
-        span:"hallo"
-    }
-}
-document.html.body.main = 'JAJA'
+const keys = (obj) => Object.keys(obj);
+const objectify = ((res)=>(keys,values)=>{
+    keys.forEach((key,i) => res[key] = values[i]);
+    return res;
+})({});
 
-const html = (o)=>Object.keys(o).map(x => `<${x}>${typeof o[x] === 'object'? html(o[x]):o[x]}</${x}>`).join(' ')
-
-console.log(html(document.html.body))
+const getAttributes = ob => ob.attributes ? ` ${keys(ob.attributes).map(x => `${x}="${ob.attributes[x]}"`).join(" ")}`:'';
+const getValue = (inc,exc)=>arr=>arr.filter(x =>  exc ? !inc.includes(x):inc.includes(x));
+const getContent = getValue(['listeners','style'],true);
+const element = (obj) => `<${obj.name}>${obj.content}</${obj.name}>`
+const stringify = (obj) => `<${obj.name}${getAttributes(obj)}>${obj.innerHTML ? obj.innerHTML.map(x => stringify(x)).join(''):obj.content}</${obj.name}>`
+console.log(stringify(test))
